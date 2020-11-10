@@ -1,0 +1,11 @@
+Homework 4 Theoretical Question
+
+(a)	Describe in one paragraph what are the main modules you plan to implement in this homework.
+
+(b)	Explain why recursive ray tracing is used, even when the scene has no mirrors.
+
+(c)	Explain the usage of a distributed ray tracer.
+
+(d)	How would you use R-tree to expedite the algorithm, if the number of spheres becomes very large?
+
+(e)	The back side of each mirror is black. Think how could you find if a ray is hitting the front side or the back side of a mirror.
