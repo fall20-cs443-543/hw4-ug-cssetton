@@ -1,15 +1,20 @@
-export class Vector{
+/*  ---------------------------------------
+ * |                                       |
+ * |      Vector and Camera classes        |
+ * |                                       |
+ *  ---------------------------------------
+ */
+//this function returns a pixelmap of the ppm image of the billboard
+//taken from Assignment 1
+class Vector{
 	constructor(x,y,z){
 		this.x=x;
 		this.y=y;
 		this.z=z;
-		this.magnitude= Math.sqrt((this.x*this.x)+(this.y*this.y)+(this.z*this.z));
 	}
 	//this inverts a ray
 	invert(){
-		this.x = -this.x;
-		this.y = -this.y;
-		this.z = -this.z;
+		return new Vector(-this.x, -this.y, -this.z);
 	}
 	//we take this vector and a normal in order ot returns a new vector;
 	reflectVector(normal){
@@ -17,6 +22,12 @@ export class Vector{
 		var temp = Vector.scale(normal, scalr);
 		var doubled = Vector.scale(temp,2);
 		return Vector.subtract(doubled,this);
+	}
+	length2() {
+		return (this.x*this.x)+(this.y*this.y)+(this.z*this.z);
+	}
+	magnitude(){
+		return Math.sqrt(this.length2());
 	}
 	//this adds this vector and vector v
 	static dot(a,b){ //this allows vector dot product
@@ -54,16 +65,21 @@ export class Vector{
 			return new Vector(v.x*s, v.y*s, v.z*s);
 
 	}
-	//this gives us a normalized vector
+	//this gives us a normalize vector
 	static normalize(vector){
-			var magni = vector.magnitude;
-			var newX = vector.x / magni;
-			var newY = vector.y / magni;
-			var newZ = vector.z / magni;
+			var magni = vector.magnitude();
+			var newX = Math.round(vector.x / magni);
+			var newY = Math.round(vector.y / magni);
+			var newZ = Math.round(vector.z / magni);
 			return new Vector(newX,newY,newZ);
 	}
+	//this gives us a normalized vector
+	static normalized(vector){
+			var magni = vector.magnitude();
+			return Vector.scale(vector,(1/magni));
+	}
 }
-export class Camera{
+class Camera{
 	constructor(w,h,eye,lookat,up, fov){
 		this.width = w;
 		this.height = h;
@@ -71,10 +87,9 @@ export class Camera{
 		this.eye = new Vector(eye[0], eye[1], eye[2]);
 		this.lookat = new Vector(lookat[0], lookat[1], lookat[2]);
 		this.up = new Vector(up[0],up[1],up[2]);
-		let tempW = Vector.subtract(this.eye, this.lookat);
-		//tempW.invert();
-		this.w = tempW;
+		this.d = Vector.normalize(Vector.subtract(this.lookat, this.eye));
+		this.w = Vector.normalize(Vector.subtract(this.eye, this.lookat));
 		this.u = Vector.cross(this.up, this.w);
-		this.v = Vector.cross(this.u,this.w);
+		this.v = Vector.cross(this.w,this.u);
 	}
 }
