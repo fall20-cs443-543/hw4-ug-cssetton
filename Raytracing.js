@@ -108,7 +108,22 @@ function Raytracing(ray, scene, depth){
 	}	
 	if(closest[0] === Infinity)
 		return defaultColor;
-	return closest[1].color;
+	var newPoint = Vector.add(Vector.scale(ray.dir,closest[0]),ray.point);
+	switch(closest[1].type){
+		case 'sphere':
+			return closest[1].color;
+		break;
+		case 'billboard':
+			if(closest[1].pic.length == 3)
+				return closest[1].pic;
+			else{
+				var temp = closest[1].findpixel(newPoint);
+				//console.log(temp);
+				return {x: temp[0], y: temp[1], z: temp[2]};
+			}
+		break;
+	}
+	
 }
 //this is an unfinished function that was supposed to detect the color of th object
 function surfaceColor(ray, scene, obj, pointAt, norm, depth) {

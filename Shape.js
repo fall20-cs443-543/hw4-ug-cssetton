@@ -13,7 +13,7 @@
   ERROR: -1
  };
 const shapetype = {
-	BILLBOARD:'bilboard',
+	BILLBOARD:'billboard',
 	SPHERE: 'sphere',
 	MIRROR: 'mirror',
 	PLANE: 'plane'
@@ -68,14 +68,18 @@ class Plane extends Shape{
 class Billboard extends Plane{
   constructor(upl, lowl, upr, pic, is){
     super(upl,lowl,upr,is);
+    this.type = shapetype.BILLBOARD;
     this.color = new Vector(.3,.4,.6);
     this.pic=pic;
   }
   findpixel(point){
-    var spaceCord = getAB(point);
-    if(spaceCord[0]<0 || spaceCord[1]<0 || spaceCord[0]>1 || spaceCord[1]>1)
+    var spaceCord = this.getAB(point);
+    if(spaceCord[0] < 0 || spaceCord[1] < 0 || spaceCord[0] > 1 || spaceCord[1] > 1)
       return { x: 0, y: 0, z: 0};
-
+    var xx = Math.round(((spaceCord[0] + 1) * this.width / 2));
+    var yy =Math.round((spaceCord[1] - 1) * this.height / -2);
+    var index = (xx*4) + (yy*4 * this.width);
+    return [this.pic[index],this.pic[index+1],this.pic[index+2]];
   }
   getAB(point){
     var sum = Vector.subtract(point,this.pul);
@@ -102,25 +106,17 @@ class Sphere extends Shape{
     var eye_to_center = Vector.subtract(this.center, ray.point);
     var tca = Vector.dot(eye_to_center, ray.dir);
     if(tca < 0)
-      return false
+      return false;
     var d2 = Vector.dot(eye_to_center, eye_to_center) - (tca * tca);
     if(d2 > (this.rsqr))
-      return false
+      return false;
     var thc = Math.sqrt(this.rsqr  - d2);
     if((tca-thc) < 0)
       return (tca+thc);
     return (tca-thc);
   }
 }
-class ppmfile{
-  constructor(n,w,h,pix){
-    this.name=n;
-    this.width=w;
-    this.height=h;
-    this.pixelmap=pix;
-  }
 
-}
 // Load PPM Image to Canvas
   // About PPM Image format: http://netpbm.sourceforge.net/doc/ppm.html
 function parsePPM(file_data){
