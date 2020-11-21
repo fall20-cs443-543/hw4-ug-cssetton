@@ -68,20 +68,23 @@ function renderScene(scene){
   var ray = {
   	point: camera.eye,
   };
-  console.log(camera);
+  //console.log(camera);
   var dx = 1/(width);
   var dy = 1/(height);
   var sum = 0;
+  var vw = Vector.scale(camera.w,-1);
   for( var x = 0; x < width; x++){
   	for (var y = 0; y < height; y++) {
-  		var xx= (2 * ((x +.5)*dx) - 1) * fovRadian * aspectRatio;
-  		var yy = (1 - 2 * ((y +.5) * dy)) * fovRadian;
-	  	ray.dir=Vector.normalize(new Vector(xx,yy,-1));
+  		var xx= (2 * ((x)*dx) - 1) * fovRadian * aspectRatio;
+  		var yy = (-2 * ((y) * dy)+1) * fovRadian;
+	  	var vu = Vector.scale(camera.u,xx);
+	  	var vv = Vector.scale(camera.v,yy);
+	  	ray.dir=Vector.normalize(Vector.add3(vw,vu,vv));
 	  	color = Raytracing(ray,scene,0);
 	  	index = (x*4) + (y*4 * width);
-	  	img[index+0]= color.x * 255;
-	  	img[index+1]= color.y * 255;
-	  	img[index+2]= color.z * 255;
+	  	img[index+0]= Math.round(color.x * 255);
+	  	img[index+1]= Math.round(color.y * 255);
+	  	img[index+2]= Math.round(color.z * 255);
 	  	img[index+3]= 255;
 	  }
   }
@@ -101,7 +104,7 @@ function Raytracing(ray, scene, depth){
 		var t = obj.hit(ray);
 		if( t == false)
 			continue;
-		if(t < closest[0] && t[0] > 0)
+		if(t < closest[0] && t > 0)
 			closest = [t, obj];
 	}	
 	if(closest[0] === Infinity)
@@ -111,5 +114,4 @@ function Raytracing(ray, scene, depth){
 //this is an unfinished function that was supposed to detect the color of th object
 function surfaceColor(ray, scene, obj, pointAt, norm, depth) {
 	var temp = obj.color;
-	//c = 	
 }

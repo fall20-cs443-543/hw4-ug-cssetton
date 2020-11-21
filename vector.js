@@ -68,9 +68,9 @@ class Vector{
 	//this gives us a normalize vector
 	static normalize(vector){
 			var magni = vector.magnitude();
-			var newX = Math.round(vector.x / magni);
-			var newY = Math.round(vector.y / magni);
-			var newZ = Math.round(vector.z / magni);
+			var newX = vector.x / magni;
+			var newY = vector.y / magni;
+			var newZ = vector.z / magni;
 			return new Vector(newX,newY,newZ);
 	}
 	//this gives us a normalized vector

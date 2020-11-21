@@ -54,6 +54,8 @@ class Plane extends Shape{
 	}
   hit(ray){
     var time = 1/ (Vector.dot(ray.dir,this.n));
+    if (time == 0)
+      return false;
     var far = Vector.dot(this.pul,this.n) - Vector.dot(ray.point,this.n);
     var t =time*far;
     if(t <= 0)
@@ -70,7 +72,7 @@ class Sphere extends Shape{
     this.rsqr = r*r;
 		this.color= new Vector(am[0], am[1], am[2]);
 	}
-  hit(ray) {
+  hit(ray){
     var eye_to_center = Vector.subtract(this.center, ray.point);
     var tca = Vector.dot(eye_to_center, ray.dir);
     if(tca < 0)

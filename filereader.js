@@ -119,12 +119,20 @@ function allFilesLoaded() {
     var cam = new Camera(scene.width, scene.height,scene.eye, scene.lookat, scene.up, scene.fov_angle);
     var maxDepth = scene.MaxDepth;
     var circles = scene.spheres;
+    var bil = scene.bilboards;
     if(scene.DefaulColor != null){
                 defaultColor = { x: scene.DefaulColor[0], y: scene.DefaulColor[1], z: scene.DefaulColor[2]};
             }
     if(circles != null)
                 circles.forEach(element => shapes.push(new Sphere(element.center,element.radius,element.ambient,element.IsMirror)));
-    
+    if(bil != null){
+        for(var i=0; i < bil.length;i++){
+            if(bil[i].filename != null)
+                 continue;
+            else
+             shapes.push(new Billboard(bil[i].UpperLeft, bil[i].LowerLeft, bil[i].UpperRight,bil[i].ambient, bil[i].IsMirror));
+         }
+    }
     v = new Vector(scene.SunLocation[0],scene.SunLocation[1],scene.SunLocation[2]);
     scene = {
         camera: cam,
