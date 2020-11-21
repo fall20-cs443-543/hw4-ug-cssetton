@@ -61,7 +61,7 @@ function renderScene(scene){
   var width = camera.width;
   defaultColor = scene.defaultC;
   let img = new Uint8Array(4* width * height);
-  let fovRadian = Math.tan((Math.PI / 180) * (camera.fov / 2)); //height
+  let fovRadian = Math.tan((Math.PI / 180) * (camera.fov/2)); //height
   let aspectRatio = width/height;
   var d = 1/fovRadian;
   var index, color;

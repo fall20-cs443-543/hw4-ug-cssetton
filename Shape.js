@@ -50,6 +50,8 @@ class Plane extends Shape{
     this.color = new Vector(.3,.4,.6);
     this.pu = Vector.subtract(this.pur,this.pul);
     this.pv = Vector.subtract(this.pll,this.pul);
+    this.u = Vector.normalize(this.pu);
+    this.v = Vector.normalize(this.pv);
     this.n = Vector.cross(Vector.subtract(this.pll,this.pul),Vector.subtract(this.pur,this.pul)); //generate normal
 	}
   hit(ray){
@@ -61,6 +63,30 @@ class Plane extends Shape{
     if(t <= 0)
       return false;
     return t;
+  }
+}
+class Billboard extends Plane{
+  constructor(upl, lowl, upr, pic, is){
+    super(upl,lowl,upr,is);
+    this.color = new Vector(.3,.4,.6);
+    this.pic=pic;
+  }
+  findpixel(point){
+    var spaceCord = getAB(point);
+    if(spaceCord[0]<0 || spaceCord[1]<0 || spaceCord[0]>1 || spaceCord[1]>1)
+      return { x: 0, y: 0, z: 0};
+
+  }
+  getAB(point){
+    var sum = Vector.subtract(point,this.pul);
+    var ab = [Vector.dot(this.u,sum),Vector.dot(this.v,sum)];
+    return ab;
+  }
+  width(w){
+    this.width=w;
+  }
+  height(h){
+    this.height=h;
   }
 }
 // this function has beent aken from HW3 but made to be a subclass of the shape object
@@ -86,15 +112,14 @@ class Sphere extends Shape{
     return (tca-thc);
   }
 }
-class Billboard extends Plane{
-	constructor(upl, lowl, upr, pic, is){
-		super(upl,lowl,upr,is);
-		this.color = new Vector(.3,.4,.6);
-    this.pic=pic;
-	}
-  findpixel(point){
-    
+class ppmfile{
+  constructor(n,w,h,pix){
+    this.name=n;
+    this.width=w;
+    this.height=h;
+    this.pixelmap=pix;
   }
+
 }
 // Load PPM Image to Canvas
   // About PPM Image format: http://netpbm.sourceforge.net/doc/ppm.html
@@ -188,5 +213,5 @@ function parsePPM(file_data){
         ptr_1++;
         char = file_data.substring(ptr,ptr_1);
       }
-      return pixmap;
+      return [pixmap,width,height];
 }

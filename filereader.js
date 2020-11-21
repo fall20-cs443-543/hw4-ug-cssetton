@@ -26,7 +26,7 @@ var input = document.getElementById("selectFiles");
 var output = document.getElementById("save_image");
 var canvas = document.getElementById('c');
 var ctx = canvas.getContext('2d');
-var shapes =[];
+var ppmstorage=[];
 
 //function to process the multiple load of scene files and OBJ files
 function multiLoad() {
@@ -87,9 +87,9 @@ function loadPPMFiles(files, scene) {
                             // TODO #1
                             // You may want to parse PPM image file and store the billboard object
                             // [hints: you may need a BillBoard class]
-                            var pixelmap = parsePPM(text_data);
-                            var board = new Billboard(billboard.UpperLeft,billboard.LowerLeft,billboard.UpperRight,pixelmap,billboard.IsMirror);
-                            shapes.push(board);
+                            var pixmap = parsePPM(text_data);
+                            var bil = {name: ppmFile.name, width:pixmap[1], height: pixmap[2], pixelmap: pixmap[0]};
+                            ppmstorage.push(bil);
             
                         } else {
                             console.log("Skipping",ppmFile.name);
@@ -118,10 +118,12 @@ function allFilesLoaded() {
     // rays and intersections, etc.
     canvas.width=scene.width;
     canvas.height=scene.height;
+    //console.log(files);
+    var shapes =[];
     var cam = new Camera(scene.width, scene.height,scene.eye, scene.lookat, scene.up, scene.fov_angle);
     var maxDepth = scene.MaxDepth;
     var circles = scene.spheres;
-    var bil = scene.bilboards;
+    var bil = scene.billboards;
     if(scene.DefaulColor != null){
                 defaultColor = { x: scene.DefaulColor[0], y: scene.DefaulColor[1], z: scene.DefaulColor[2]};
             }
@@ -129,8 +131,19 @@ function allFilesLoaded() {
                 circles.forEach(element => shapes.push(new Sphere(element.center,element.radius,element.ambient,element.IsMirror)));
     if(bil != null){
         for(var i=0; i < bil.length;i++){
-            if(bil[i].filename != null)
-                 continue;
+            if(bil[i].filename != null){
+                var index=0;
+                for(var j = 0; j <ppmstorage.length;j++){
+                    if(ppmstorage[j].name == bil[i].filename){
+                        index=j;
+                        break;
+                    }
+                 }
+                 var b = new Billboard(bil[i].UpperLeft, bil[i].LowerLeft, bil[i].UpperRight,ppmstorage[index].pixelmap, bil[i].IsMirror);
+                 b.width(ppmstorage[index].width);
+                 b.height(ppmstorage[index].height);
+                 shapes.push(b);
+             }
             else
              shapes.push(new Billboard(bil[i].UpperLeft, bil[i].LowerLeft, bil[i].UpperRight,bil[i].ambient, bil[i].IsMirror));
          }
