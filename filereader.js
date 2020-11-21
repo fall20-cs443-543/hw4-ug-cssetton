@@ -79,19 +79,21 @@ function loadPPMFiles(files, scene) {
 
             //match input file to its contents, finding the entry in the scene
             //file and storing it in the variable billboard
-            billboard = scene.billboards.find(o => o.filename === ppmFile.name);
-
-            if (billboard != undefined) {
-                console.log("Found PPM file", ppmFile.name);
-                // TODO #1
-                // You may want to parse PPM image file and store the billboard object
-                // [hints: you may need a BillBoard class]
-                var pixelmap = parsePPM(text_data);
-                var board = new Billboard(billboard.UpperLeft,billboard.LowerLeft,billboard.UpperRight,pixelmap,billboard.IsMirror);
-                shapes.push(board);
-
-            } else {
-                console.log("Skipping",ppmFile.name);
+            if(scene.billboards != null){
+                billboard = scene.billboards.find(o => o.filename === ppmFile.name);
+            
+                        if (billboard != undefined) {
+                            console.log("Found PPM file", ppmFile.name);
+                            // TODO #1
+                            // You may want to parse PPM image file and store the billboard object
+                            // [hints: you may need a BillBoard class]
+                            var pixelmap = parsePPM(text_data);
+                            var board = new Billboard(billboard.UpperLeft,billboard.LowerLeft,billboard.UpperRight,pixelmap,billboard.IsMirror);
+                            shapes.push(board);
+            
+                        } else {
+                            console.log("Skipping",ppmFile.name);
+                        }
             }
 
             //track progress

@@ -25,7 +25,7 @@ var upload =  function() {
 			}
 			if(circles != null)
 				circles.forEach(element => shape.push(new Sphere(element.center,element.radius,element.ambient,element.IsMirror)));
-			/*if(bilboards != null){
+			if(bilboards != null){
 				for(var i=0; i < bilboards.length;i++){
 					if(bilboards[i].filename != null){
 						shape.push(new Billboard(bilboards[i].UpperLeft, bilboards[i].LowerLeft, bilboards[i].UpperRight, bilboards[i].filename, bilboards[i].IsMirror));
@@ -33,7 +33,7 @@ var upload =  function() {
 					else
 						shape.push(new Billboard(bilboards[i].UpperLeft, bilboards[i].LowerLeft, bilboards[i].UpperRight,bilboards[i].ambient, bilboards[i].IsMirror));
 				}
-			}*/
+			}
 			v = new Vector(data.SunLocation[0],data.SunLocation[1],data.SunLocation[2]);
 			scene = {
 				camera: cam,
@@ -61,7 +61,7 @@ function renderScene(scene){
   var width = camera.width;
   defaultColor = scene.defaultC;
   let img = new Uint8Array(4* width * height);
-  let fovRadian = Math.tan((Math.PI / 180) * (camera.fov / 2)); //hald width
+  let fovRadian = Math.tan((Math.PI / 180) * (camera.fov / 2)); //height
   let aspectRatio = width/height;
   var d = 1/fovRadian;
   var index, color;
@@ -72,14 +72,13 @@ function renderScene(scene){
   var dx = 1/(width);
   var dy = 1/(height);
   var sum = 0;
-  var vw = Vector.scale(camera.w,-1);
   for( var x = 0; x < width; x++){
   	for (var y = 0; y < height; y++) {
-  		var xx= (2 * ((x)*dx) - 1) * fovRadian * aspectRatio;
-  		var yy = (-2 * ((y) * dy)+1) * fovRadian;
+  		var xx= ((2 * x) * dx - 1) * fovRadian * aspectRatio;
+  		var yy = ((-2 * y) * dy + 1) * fovRadian;
 	  	var vu = Vector.scale(camera.u,xx);
 	  	var vv = Vector.scale(camera.v,yy);
-	  	ray.dir=Vector.normalize(Vector.add3(vw,vu,vv));
+	  	ray.dir = Vector.normalize(Vector.add3(camera.w,vu,vv));
 	  	color = Raytracing(ray,scene,0);
 	  	index = (x*4) + (y*4 * width);
 	  	img[index+0]= Math.round(color.x * 255);

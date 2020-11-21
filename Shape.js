@@ -92,6 +92,9 @@ class Billboard extends Plane{
 		this.color = new Vector(.3,.4,.6);
     this.pic=pic;
 	}
+  findpixel(point){
+    
+  }
 }
 // Load PPM Image to Canvas
   // About PPM Image format: http://netpbm.sourceforge.net/doc/ppm.html

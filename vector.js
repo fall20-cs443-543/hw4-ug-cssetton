@@ -87,9 +87,9 @@ class Camera{
 		this.eye = new Vector(eye[0], eye[1], eye[2]);
 		this.lookat = new Vector(lookat[0], lookat[1], lookat[2]);
 		this.up = new Vector(up[0],up[1],up[2]);
-		this.d = Vector.normalize(Vector.subtract(this.lookat, this.eye));
-		this.w = Vector.normalize(Vector.subtract(this.eye, this.lookat));
-		this.u = Vector.cross(this.up, this.w);
-		this.v = Vector.cross(this.w,this.u);
+		this.w = Vector.normalize(Vector.subtract(this.lookat, this.eye));
+		//this.w = Vector.normalize(Vector.subtract(this.eye, this.lookat));
+		this.u = Vector.normalize(Vector.cross(this.w,this.up));
+		this.v = Vector.cross(this.u,this.w);
 	}
 }
